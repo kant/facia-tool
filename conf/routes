@@ -45,6 +45,8 @@ GET         /defaults                                controllers.DefaultsControl
 
 POST        /treats/*collectionId                    controllers.FaciaToolController.treatEdits(collectionId)
 
+POST        /partial/*collectionId                   controllers.AtomicActionsController.editCollection(collectionId)
+
 # endpoints for proxying https
 GET         /api/preview/*path                       controllers.FaciaContentApiProxy.capiPreview(path)
 GET         /api/live/*path                          controllers.FaciaContentApiProxy.capiLive(path)

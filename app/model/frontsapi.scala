@@ -128,20 +128,23 @@ trait UpdateActions {
   }
 
   def updateCollectionList(id: String, update: UpdateList, identity: User): Future[Option[CollectionJson]] = {
+    FrontsApi.amazonClient.collection(id).map { banana(id, update, identity, _)}}
+
+  def banana(id: String, update: UpdateList, identity: User, maybeCollectionJson: Option[CollectionJson]): Option[CollectionJson] = {
     lazy val updateJson = Json.toJson(update)
-    FrontsApi.amazonClient.collection(id).map { maybeCollectionJson =>
-      maybeCollectionJson
-        .map(insertIntoLive(update, identity, _))
-        .map(insertIntoDraft(update, identity, _))
-        .map(removeGroupIfNoLongerGrouped(id, _))
-        .map(pruneBlock)
-        .map(CollectionJsonFunctions.sortByGroup)
-        .map(capCollection)
-        .map(FaciaApi.updateIdentity(_, identity))
-        .map(putCollectionJson(id, _))
-        .map(archiveUpdateBlock(id, _, updateJson, identity))
-        .orElse(Option(createCollectionJson(identity, update)))
-        .map(putCollectionJson(id, _))}}
+    maybeCollectionJson
+      .map(insertIntoLive(update, identity, _))
+      .map(insertIntoDraft(update, identity, _))
+      .map(removeGroupIfNoLongerGrouped(id, _))
+      .map(pruneBlock)
+      .map(CollectionJsonFunctions.sortByGroup)
+      .map(capCollection)
+      .map(FaciaApi.updateIdentity(_, identity))
+      .map(putCollectionJson(id, _))
+      .map(archiveUpdateBlock(id, _, updateJson, identity))
+      .orElse(Option(createCollectionJson(identity, update)))
+      .map(putCollectionJson(id, _))
+  }
 
   def updateCollectionFilter(id: String, update: UpdateList, identity: User): Future[Option[CollectionJson]] = {
     lazy val updateJson = Json.toJson(update)
