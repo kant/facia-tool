@@ -54,6 +54,8 @@ trait ConfigAgentTrait {
     }).toSeq
   }
 
+  def getMasterConfig: Option[Config] = configAgent.get()
+
   def getConfig(id: String): Option[CollectionConfig] = configAgent.get().flatMap(_.collections.get(id).map(CollectionConfig.fromCollectionJson))
 
 }

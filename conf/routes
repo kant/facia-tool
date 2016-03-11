@@ -72,3 +72,8 @@ GET         /breaking-news                           controllers.VanityRedirects
 
 # Admin
 GET         /troubleshoot                            controllers.TroubleshootController.troubleshoot
+
+#################### CORS #########################
+# Allow cross origin requests for these resources #
+###################################################
+GET         /fronts                                  controllers.CrossOriginController.listFronts()
