@@ -2,32 +2,18 @@ import template from 'troubleshoot/templates/stale.html!text';
 import createScheduler from 'troubleshoot/scheduler';
 import humanTime from 'utils/human-time';
 import CONST from 'constants/defaults';
+import {generateClone, wrap} from 'troubleshoot/lib/renderer';
 
-const disposeActions = [];
 const STALE_NETWORK_FRONT = 6 * 60 * 1000;
 const STALE_EDITORIAL_FRONT = 20 * 60 * 1000;
 const STALE_COMMERCIAL_FRONT = 2.5 * 3600 * 1000;
 
-var clone = (function (mainTemplateText) {
-    const templatesMap = {};
-    const templateElement = document.createElement('div');
-    templateElement.innerHTML = mainTemplateText;
-
-    return function (id) {
-        if (!templatesMap[id]) {
-            templatesMap[id] = templateElement.querySelector('#' + id);
-            if (!templatesMap[id]) {
-                throw new Error('Invalid template ID ' + id);
-            }
-        }
-        return document.importNode(templatesMap[id].content, true);
-    };
-})(template);
+const clone = generateClone(template);
+const wrapper = wrap();
 
 export function render (container) {
     const mainView = clone('mainView');
-    container.innerHTML = '';
-    container.appendChild(mainView);
+    wrapper.initialize(mainView, container);
     populateDefaults(container);
     registerListeners(container);
 }
@@ -46,28 +32,17 @@ function populateDefaults (container) {
 }
 
 function registerListeners (container) {
-    const checkCallback = checkFront.bind(null, container, null);
     const checkFrontElement = container.querySelector('.checkFront');
-    checkFrontElement.addEventListener('click', checkCallback);
-    disposeActions.push(function () {
-        checkFrontElement.removeEventListener('click', checkCallback);
-    });
-    const rePressFront = delegatePressFront.bind(null, container);
-    container.addEventListener('click', rePressFront);
-    disposeActions.push(function () {
-        container.removeEventListener('click', rePressFront);
-    });
-    const submitCallback = checkFrontOnSubmit.bind(null, container);
+    wrapper
+        .attach(checkFrontElement, 'click', checkFront, [null])
+        .attach(container, 'click', delegatePressFront);
+
     const formElements = Array.from(container.querySelectorAll('.form'));
-    formElements.forEach(form => form.addEventListener('submit', submitCallback));
-    disposeActions.push(function () {
-        formElements.forEach(form => form.removeEventListener('submit', submitCallback));
-    });
+    formElements.forEach(form => wrapper.attach(form, 'submit', checkFrontOnSubmit));
 }
 
 export function dispose () {
-    disposeActions.forEach(action => action());
-    disposeActions.length = 0;
+    wrapper.dispose();
 }
 
 function extractFrontName (container) {

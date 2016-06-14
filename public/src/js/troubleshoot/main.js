@@ -44,14 +44,16 @@ function renderViewInstance(view, instance) {
 }
 
 function disposePreviousView () {
-    if (currentLoadedViewInstance && currentLoadedView.dispose) {
-        return Promise.resolve(currentLoadedView.dispose()).then(() => {
+    return Promise.resolve(currentLoadedViewInstance)
+        .then(instance => {
+            if (instance && instance.dispose) {
+                return instance.dispose();
+            }
+        })
+        .then(() => {
             currentLoadedView = null;
             currentLoadedViewInstance = null;
         });
-    } else {
-        return Promise.resolve();
-    }
 }
 
 function interceptNavigation (event) {
