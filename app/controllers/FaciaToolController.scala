@@ -11,6 +11,7 @@ import metrics.FaciaToolMetrics
 import model.NoCache
 import permissions.BreakingNewsEditCollectionsCheck
 import play.api.libs.json._
+import play.api.libs.ws.WSClient
 import play.api.mvc._
 import services._
 import tools.FaciaApiIO
@@ -21,7 +22,7 @@ import scala.concurrent.Future
 
 class FaciaToolController(val config: ApplicationConfiguration, val acl: Acl, val frontsApi: FrontsApi, val faciaApiIO: FaciaApiIO, val updateActions: UpdateActions,
                           breakingNewsUpdate: BreakingNewsUpdate, val auditingUpdates: AuditingUpdates, val faciaPress: FaciaPress, val faciaPressQueue: FaciaPressQueue,
-                          val configAgent: ConfigAgent, val s3FrontsApi: S3FrontsApi) extends Controller with PanDomainAuthActions with BreakingNewsEditCollectionsCheck {
+                          val configAgent: ConfigAgent, val s3FrontsApi: S3FrontsApi, override val wsClient: WSClient) extends Controller with PanDomainAuthActions with BreakingNewsEditCollectionsCheck {
 
   override lazy val actorSystem = ActorSystem()
 

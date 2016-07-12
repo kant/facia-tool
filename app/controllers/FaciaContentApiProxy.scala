@@ -8,14 +8,14 @@ import conf.ApplicationConfiguration
 import metrics.FaciaToolMetrics
 import model.Cached
 import play.api.Logger
-import play.api.libs.ws.{WSAPI, WSAuthScheme, WSRequest}
+import play.api.libs.ws.{WSAPI, WSAuthScheme, WSClient, WSRequest}
 import play.api.mvc._
 import switchboard.SwitchManager
 import util.ContentUpgrade.rewriteBody
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class FaciaContentApiProxy(ws: WSAPI, val config: ApplicationConfiguration) extends Controller with PanDomainAuthActions {
+class FaciaContentApiProxy(ws: WSAPI, val config: ApplicationConfiguration, override val wsClient: WSClient) extends Controller with PanDomainAuthActions {
   implicit class string2encodings(s: String) {
     lazy val urlEncoded = URLEncoder.encode(s, "utf-8")
   }

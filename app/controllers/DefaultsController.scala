@@ -8,6 +8,7 @@ import permissions.Permissions
 import play.api.Play
 import play.api.Play.current
 import play.api.libs.json.{JsValue, Json}
+import play.api.libs.ws.WSClient
 import play.api.mvc._
 import switchboard.SwitchManager
 import util.{Acl, AclJson}
@@ -33,7 +34,7 @@ case class Defaults(
   collectionMetadata: Iterable[Metadata]
 )
 
-class DefaultsController(val config: ApplicationConfiguration, val acl: Acl, val isDev: Boolean) extends Controller with PanDomainAuthActions {
+class DefaultsController(val config: ApplicationConfiguration, val acl: Acl, val isDev: Boolean, override val wsClient: WSClient) extends Controller with PanDomainAuthActions {
   def configuration = APIAuthAction.async { request =>
     for {
       hasBreakingNews <- acl.testUser(Permissions.BreakingNewsAlert, "facia-tool-allow-breaking-news-for-all")(request.user.email)

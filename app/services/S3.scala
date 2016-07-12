@@ -16,7 +16,7 @@ sealed trait S3Accounts {
   def bucket: String
   def client: Option[AmazonS3Client]
 }
-case class FrontendS3Account(val config: ApplicationConfiguration, val awsEndpoints: AwsEndpoints) extends S3Accounts {
+case class FrontendS3Account(config: ApplicationConfiguration, awsEndpoints: AwsEndpoints) extends S3Accounts {
   lazy val bucket = config.aws.bucket
   lazy val client: Option[AmazonS3Client] =
     config.aws.crossAccount.map{ credentials => {
@@ -24,7 +24,7 @@ case class FrontendS3Account(val config: ApplicationConfiguration, val awsEndpoi
       client.setEndpoint(awsEndpoints.s3)
       client}}
 }
-case class CmsFrontsS3Account(val config: ApplicationConfiguration, val awsEndpoints: AwsEndpoints) extends S3Accounts {
+case class CmsFrontsS3Account(config: ApplicationConfiguration, awsEndpoints: AwsEndpoints) extends S3Accounts {
   lazy val bucket = config.aws.frontsBucket
   lazy val client: Option[AmazonS3Client] =
     config.aws.credentials.map{ credentials => {
