@@ -59,6 +59,9 @@ TwirlKeys.templateImports ++= Seq(
 val awsVersion = "1.11.18"
 val capiModelsVersion = "8.17"
 
+resolvers +=
+    "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+
 libraryDependencies ++= Seq(
     ws,
     filters,
