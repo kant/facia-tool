@@ -1,5 +1,7 @@
 package services
 
+import com.amazonaws.auth.profile.ProfileCredentialsProvider
+import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentialsProvider, STSAssumeRoleSessionCredentialsProvider}
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.CannedAccessControlList.{Private, PublicRead}
 import com.amazonaws.services.s3.model._
@@ -16,13 +18,23 @@ sealed trait S3Accounts {
   def bucket: String
   def client: Option[AmazonS3Client]
 }
-case class CmsFrontsS3Account(val config: ApplicationConfiguration, val awsEndpoints: AwsEndpoints) extends S3Accounts {
+case class CmsFrontsS3Account(config: ApplicationConfiguration, awsEndpoints: AwsEndpoints) extends S3Accounts {
   lazy val bucket = config.aws.frontsBucket
   lazy val client: Option[AmazonS3Client] =
     config.aws.credentials.map{ credentials => {
       val client = new AmazonS3Client(credentials)
       client.setEndpoint(awsEndpoints.s3)
       client}}
+}
+
+case class MediaServiceS3Account(config: ApplicationConfiguration, awsEndpoints: AwsEndpoints) {
+  lazy val testBucket = config.aws.mediaServiceTestThumbBucket
+  lazy val prodBucket = config.aws.mediaServiceProdThumbBucket
+  lazy val client: Option[AmazonS3Client] = {
+    val client = new AmazonS3Client(config.aws.mediaServiceCredentials)
+    client.setEndpoint(awsEndpoints.s3)
+    Some(client)
+  }
 }
 
 trait S3 {
@@ -105,6 +117,7 @@ class S3FrontsApi(val config: ApplicationConfiguration, val isTest: Boolean, val
   val namespace = "frontsapi"
   lazy val location = s"$stage/$namespace"
   val cmsFrontsS3Account = new CmsFrontsS3Account(config, awsEndpoints)
+  val mediaServiceS3Account = new MediaServiceS3Account(config, awsEndpoints)
 
   def getLiveFapiPressedKeyForPath(path: String): String =
     s"$location/pressed/live/$path/fapi/pressed.json"

@@ -3,12 +3,14 @@ export function thumbnail() {
         fields = this.fields,
         state = this.state;
 
-    if (meta.imageReplace() && meta.imageSrc()) {
+    if (meta.imageReplace() && meta.imageSrc() && meta.imageSrcThumb()) {
+        return meta.imageSrcThumb();
+    } else if (meta.imageReplace() && meta.imageSrc()) {
         return meta.imageSrc();
     } else if (meta.imageCutoutReplace()) {
         return meta.imageCutoutSrc() || state.imageCutoutSrcFromCapi() || fields.secureThumbnail() || fields.thumbnail();
     } else if (meta.imageSlideshowReplace && meta.imageSlideshowReplace() && meta.slideshow() && meta.slideshow()[0]) {
-        return meta.slideshow()[0].src;
+        return meta.slideshow()[0].thumb;
     } else {
         return fields.secureThumbnail() || fields.thumbnail();
     }
@@ -19,12 +21,14 @@ export function main() {
         fields = this.fields,
         state = this.state;
 
-    if (meta.imageReplace() && meta.imageSrc()) {
+    if (meta.imageReplace() && meta.imageSrc() && meta.imageSrcThumb()) {
+        return meta.imageSrcThumb();
+    } else if (meta.imageReplace() && meta.imageSrc()) {
         return meta.imageSrc();
     } else if (meta.imageCutoutReplace()) {
         return meta.imageCutoutSrc() || state.imageCutoutSrcFromCapi() || fields.secureThumbnail() || fields.thumbnail();
     } else if (meta.imageSlideshowReplace && meta.imageSlideshowReplace() && meta.slideshow() && meta.slideshow()[0]) {
-        return meta.slideshow()[0].src;
+        return meta.slideshow()[0].thumb;
     } else if (state.imageSrcFromCapi()) {
         return state.imageSrcFromCapi().href;
     } else {

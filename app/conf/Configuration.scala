@@ -61,6 +61,15 @@ class ApplicationConfiguration(val playConfiguration: PlayConfiguration, val isP
     lazy val bucket = getMandatoryString("aws.bucket")
     lazy val frontsBucket = getMandatoryString("aws.frontsBucket")
 
+    lazy val mediaServiceTestThumbBucket = getMandatoryString("aws.mediaServiceTestThumbBucket")
+    lazy val mediaServiceProdThumbBucket = getMandatoryString("aws.mediaServiceProdThumbBucket")
+    lazy val mediaServiceRole = getMandatoryString("aws.mediaServiceRole")
+    lazy val mediaServiceCredentials = new AWSCredentialsProviderChain(
+      new STSAssumeRoleSessionCredentialsProvider(mediaServiceRole, "media-service-role"),
+      new ProfileCredentialsProvider("media-service"),
+      new InstanceProfileCredentialsProvider()
+    )
+
     def mandatoryCredentials: AWSCredentialsProvider = credentials.getOrElse(throw new BadConfigurationException("AWS credentials are not configured"))
     val credentials: Option[AWSCredentialsProvider] = {
       val provider = new AWSCredentialsProviderChain(

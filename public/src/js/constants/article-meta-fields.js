@@ -63,6 +63,13 @@ export default Object.freeze([
         type: 'text'
     },
     {
+        key: 'imageSrcThumb',
+        visibleWhen: 'imageReplace',
+        label: 'replacement image thumbnail',
+        type: 'text'
+
+    },
+    {
         key: 'imageSrcWidth',
         visibleWhen: 'imageReplace',
         label: 'replacement image width',

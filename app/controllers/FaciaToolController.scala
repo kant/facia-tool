@@ -3,7 +3,8 @@ package controllers
 import _root_.util.Acl
 import akka.actor.ActorSystem
 import auth.PanDomainAuthActions
-import com.gu.facia.client.models.Metadata
+import com.gu.facia.client.{MediaServiceClient, S3ClientAndBuckets}
+import com.gu.facia.client.models.{CollectionJson, Metadata}
 import com.gu.pandomainauth.action.UserRequest
 import conf.ApplicationConfiguration
 import frontsapi.model._
@@ -33,9 +34,16 @@ class FaciaToolController(val config: ApplicationConfiguration, val acl: Acl, va
 
   def getCollection(collectionId: String) = APIAuthAction.async { request =>
     FaciaToolMetrics.ApiUsageCount.increment()
-    frontsApi.amazonClient.collection(collectionId).map { configJson =>
+    frontsApi.amazonClient.collection(collectionId).map { configJson: Option[CollectionJson] =>
+
+      // inject temporary thumbnail urls into the json response
+      val collectionJsonWithInjectedThumbnails = for {
+        cj <- configJson
+        s3Client <- s3FrontsApi.mediaServiceS3Account.client
+      } yield MediaServiceClient.addThumbnailsToCollection(cj)(S3ClientAndBuckets(s3Client, s3FrontsApi.mediaServiceS3Account.prodBucket, s3FrontsApi.mediaServiceS3Account.testBucket))
+
       NoCache {
-        Ok(Json.toJson(configJson)).as("application/json")}}}
+        Ok(Json.toJson(collectionJsonWithInjectedThumbnails)).as("application/json")}}}
 
   def publishCollection(collectionId: String) = APIAuthAction.async { implicit request =>
     withModifyPermissionForCollections(Set(collectionId)) {
