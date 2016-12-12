@@ -135,7 +135,7 @@ export default class Editor extends BaseClass {
         } else {
             return validateImageEvent({dataTransfer: element}, params.options)
                 .then(img => {
-                    this[targetMethod](params, img, img.origin);
+                    this[targetMethod](params, img, img.origin, img.imageSrcThumb);
                 }, err => {
                     this[targetMethod](params, err);
                 });
@@ -165,11 +165,12 @@ export default class Editor extends BaseClass {
         }
     }
 
-    assignImageToSpreadElement(params, imgOrError, origin) {
+    assignImageToSpreadElement(params, imgOrError, origin, thumbSec) {
         var imageSrc = this.article.meta[params.src],
             imageSrcWidth = this.article.meta[params.width],
             imageSrcHeight = this.article.meta[params.height],
-            imageSrcOrigin = this.article.meta[params.origin];
+            imageSrcOrigin = this.article.meta[params.origin],
+            imageSrcThumb = this.article.meta[params.thumb];
 
         if (!imgOrError || imgOrError instanceof Error) {
             assign(this, [imageSrc, imageSrcWidth, imageSrcHeight, imageSrcOrigin], []);
@@ -178,13 +179,13 @@ export default class Editor extends BaseClass {
             }
         } else {
             assign(this,
-                [imageSrc, imageSrcWidth, imageSrcHeight, imageSrcOrigin],
-                [imgOrError.src, imgOrError.width, imgOrError.height, origin]
+                [imageSrc, imageSrcWidth, imageSrcHeight, imageSrcOrigin, imageSrcThumb],
+                [imgOrError.src, imgOrError.width, imgOrError.height, origin, thumbSec]
             );
         }
     }
 
-    assignToObjectElement(params, imgOrError, origin) {
+    assignToObjectElement(params, imgOrError, origin, thumbSec) {
         if (!imgOrError || imgOrError instanceof Error) {
             assign(this, [this.meta], []);
             if (imgOrError) {
@@ -192,7 +193,8 @@ export default class Editor extends BaseClass {
             }
         } else {
             assign(this, [this.meta],[_.extend({}, imgOrError, {
-                origin: origin
+                origin: origin,
+                imageSrcThumb: thumbSec
             })]);
         }
     }
@@ -214,6 +216,9 @@ function extractImageElements(value) {
 
 function assign(scope, metas, values) {
     scope.performValidation = false;
-    metas.forEach((meta, index) => meta(values[index]));
+    metas.forEach((meta, index) => {
+        return meta(values[index]);
+    });
+
     scope.performValidation = true;
 }

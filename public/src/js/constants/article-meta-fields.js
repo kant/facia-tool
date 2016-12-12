@@ -53,6 +53,7 @@ export default Object.freeze([
                 width: 'imageSrcWidth',
                 height: 'imageSrcHeight',
                 origin: 'imageSrcOrigin',
+                thumb: 'imageSrcThumb',
                 options: {
                     minWidth: 400,
                     widthAspectRatio: 5,

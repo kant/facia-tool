@@ -150,6 +150,7 @@ function validateActualImage (image) {
 
 function validateImageEvent (event, criteria = {}) {
     let mediaItem = grid().getCropFromEvent(event);
+    let thumbnail = grid().getThumbnailFromEvent(event);
 
     if (mediaItem) {
         return getSuitableAsset([{
@@ -166,6 +167,7 @@ function validateImageEvent (event, criteria = {}) {
                 src: path,
                 origin: origin || path,
                 thumb: thumb || path,
+                imageSrcThumb: thumbnail.secureUrl,
                 width, height
             };
         });
