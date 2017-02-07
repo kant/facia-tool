@@ -1,0 +1,21 @@
+<div class="backfilledCollection" data-bind="
+    makeBackfillDroppable: true,
+    css: {
+        underDrag: state.underDrag
+    },
+    visible: meta.parentCollection
+">
+    <span class="backfilledCollectionLabel" >
+        <!-- ko with: meta.parentCollection -->
+        <span data-bind="
+            text: displayName,
+            attr: {
+                title: fronts.join('\n')
+            }"></span>
+        <!-- /ko -->
+        <a class="backfilledCollectionClear" data-bind="
+            click: clearParentCollection">
+            <i class="fa fa-remove"></i>
+        </a>
+    </span>
+</div>

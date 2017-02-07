@@ -125,6 +125,11 @@ var register = _.once(() => {
         synchronous: true,
         template: { text: 'widgets/config-collection-backfill.html' }
     });
+    ko.components.register('config-collection-backfill-options', {
+        viewModel: { jspm: 'widgets/config-collection-backfill-options' },
+        synchronous: true,
+        template: { text: 'widgets/config-collection-backfill-options.html' }
+    });    
     ko.components.register('config-collection-tags', {
         viewModel: { jspm: 'widgets/config-collection-tags' },
         synchronous: true,

@@ -1998,6 +1998,10 @@ ol.search_list > li::before {
     right: 10px;
 }
 
+.cnf-from .radio-buttons label {
+    clear: none;
+}
+
 .backfilledCollection {
     float: left;
     padding: 7px;

@@ -9,7 +9,7 @@
                 data-bind="template: {name: 'template_front', data: pinnedFront}"></div>
         <!-- /ko -->
         <div class="configListFronts"
-            data-bind="template: {name: 'template_front', foreach: fronts}"></div>
+            data-bind="template: {name: 'template_front', foreach: fronts, as: 'front'}"></div>
     </div>
 </div>
 
@@ -225,8 +225,15 @@
                 <input type="text" data-bind="
                     value: meta.description"/>
 
+            <!-- ko ifnot: front.props.priority() === 'email' -->
             <config-collection-backfill params="backfill: meta.backfill"></config-collection-backfill>
             <config-collection-tags params="tags: meta.metadata" class="tags"></config-collection-tags>
+            <!-- /ko -->
+
+            <!-- ko if: front.props.priority() === 'email' -->
+            <config-collection-backfill-options params="backfill: meta.backfill"></config-collection-backfill-options>
+            <!-- /ko -->
+
             <!-- ko if: meta.groups -->
                 <label>Groups</label>
                 <span class="cnf-form__value" data-bind="text: meta.groups"></span>

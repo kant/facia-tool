@@ -21,6 +21,7 @@ module.exports = function() {
                 'facia-tool/widgets/columns/fronts-search',
                 'facia-tool/widgets/columns/fronts-config',
                 'facia-tool/widgets/config-collection-backfill',
+                'facia-tool/widgets/config-collection-backfill-options',
                 'facia-tool/widgets/config-collection-tags',
                 'facia-tool/widgets/config-card-types',
                 'facia-tool/widgets/config-nav-sections'
