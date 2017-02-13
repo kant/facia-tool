@@ -13,6 +13,7 @@ New developers quick-start
 1. [Code Dependencies](#code-dependencies)
 1. [Run the App](#run-the-app)
 1. [Unit tests](#unit-tests)
+1. [Deployment](#deployment)
 
 
 ### Application dependencies
@@ -225,5 +226,9 @@ Runs the tests on the browserm, starts `karma` in debug mode. You can connect yo
 You can run a single test going to [http://localhost:9876/debug.html?test=collections](http://localhost:9876/debug.html?test=collections), spec files are inside `facia-tool/test/public/spec`.
 
 You need to have version 4.1 or higher of node installed to be able to run the tests
+
+### Deployment
+
+Deploy using Riff raff
 
 Enjoy!
